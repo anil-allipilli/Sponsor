@@ -17,13 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from accounts.viewsets import SponseeViewSet, UserViewSet
+from accounts.viewsets import SponseeViewSet, UserViewSet, SchoolViewSet, ReasonViewSet, SponserViewSet
 
 router = DefaultRouter()
 router.register("sponsees", SponseeViewSet, basename="accounts")
 router.register("users", UserViewSet, basename="users")
+router.register("schools", SchoolViewSet, basename="schools")
+router.register("reasons", ReasonViewSet, basename="reasons")
+router.register("sponsers", SponserViewSet, basename="sponsers")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
 ]
