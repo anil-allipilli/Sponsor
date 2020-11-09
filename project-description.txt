@@ -1,0 +1,26 @@
+Users can register and apply for sponsorship. Applying for a sponsorship is a step by step
+ process (wizards) that includes:
+
+Collecting user bio-data (
+  name, 
+  address, 
+  phone, 
+  email, 
+  Birth certificate file, 
+  national id file
+  )
+School information (
+  name, 
+  address, 
+  academic level of student, 
+  expected year of completion
+  )
+
+Reasons they deserve to be sponsored and a recommendation letter.
+
+Staff at the office are able to login and approve the application and the applicant is
+ notified via email whether the application has been approved.
+
+Sponsors are able to view approved applications and choose to sponsor the applicant.
+ The applicant is notified once they are successfully sponsored with details of the
+  sponsor included.
