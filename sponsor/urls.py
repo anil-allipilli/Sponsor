@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from accounts.viewsets import SponseeViewSet, UserViewSet, SchoolViewSet, ReasonViewSet, SponserViewSet
+from accounts.viewsets import UserViewSet, SchoolViewSet, ReasonViewSet, SponserViewSet
+from accounts.views import CreateSponseeView
 
 router = DefaultRouter()
-router.register("sponsees", SponseeViewSet, basename="accounts")
+# router.register("sponsees", SponseeViewSet, basename="accounts")
 router.register("users", UserViewSet, basename="users")
 router.register("schools", SchoolViewSet, basename="schools")
 router.register("reasons", ReasonViewSet, basename="reasons")
@@ -28,5 +29,9 @@ router.register("sponsers", SponserViewSet, basename="sponsers")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/createsponser',
+         CreateSponseeView.as_view()),
+    # path('api/createsponser',
+    #      SponseeCreateViewSet.as_view({'post': 'create'})),
+    path('', include(router.urls)),
 ]
