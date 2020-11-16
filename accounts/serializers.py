@@ -63,6 +63,20 @@ class SponserCreateSerializer(serializers.ModelSerializer):
 #                   'birth_certificate', 'national_id']
 
 
+class SchoolSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = School
+        fields = ["name", "address", ]
+
+
+class ReasonSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reason
+        fields = ["reason"]
+
+
 class SponserSerializer(serializers.ModelSerializer):
     user = UserRetrieveSerializer()
 
@@ -71,15 +85,11 @@ class SponserSerializer(serializers.ModelSerializer):
         fields = ["user"]
 
 
-class SchoolSerializer(serializers.ModelSerializer):
+class SponseeListSerializer(serializers.ModelSerializer):
+    school = SchoolSerializer()
+    reason = ReasonSerializer()
 
     class Meta:
-        model = School
-        fields = '__all__'
-
-
-class ReasonSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Reason
-        fields = '__all__'
+        model = Sponsee
+        fields = ['user', 'phone', "school", "reason",
+                  'birth_certificate', 'national_id']

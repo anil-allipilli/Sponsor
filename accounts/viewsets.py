@@ -20,8 +20,8 @@ from accounts.permissions import IsOwnerOrReadOnly
 from rest_framework.generics import GenericAPIView
 
 
-class SponserViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+class SponserViewSet(viewsets.ReadOnlyModelViewSet):
+    # permission_classes = [IsAuthenticated]
 
     queryset = Sponser.objects.all()
     serializer_class = SponserSerializer
@@ -34,7 +34,7 @@ class SponseeListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SponseeListSerializer
 
 
-class SchoolViewSet(viewsets.ModelViewSet):
+class SchoolViewSet(viewsets.ReadOnlyModelViewSet):
     # permission_classes = [IsAuthenticated]
 
     queryset = School.objects.all()

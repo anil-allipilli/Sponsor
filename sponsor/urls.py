@@ -14,8 +14,8 @@ from accounts.views import CreateSponseeView, CreateSponserView, SponseeReasonVi
 
 router = DefaultRouter()
 
-router.register("users", UserViewSet, basename="users")
-router.register("schools", SchoolViewSet, basename="schools")
+# router.register("users", UserViewSet, basename="users")
+# router.register("schools", SchoolViewSet, basename="schools")
 # router.register("reasons", ReasonViewSet, basename="reasons")
 router.register("sponsers", SponserViewSet, basename="sponsers")
 router.register("sponsees", SponseeListViewSet, basename="sponsees")

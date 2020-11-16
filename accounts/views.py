@@ -217,3 +217,10 @@ class SponseeSchoolAPIView(GenericAPIView):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        serializer.save()
