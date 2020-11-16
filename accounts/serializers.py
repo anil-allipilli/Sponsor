@@ -6,11 +6,23 @@ from accounts.models import Sponsee, School, Reason, Sponser
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = [
+            'id',
             'password',
+            'username',
+            'first_name',
+            'last_name',
+            "email"
+        ]
+
+
+class UserRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+
             'username',
             'first_name',
             'last_name',
@@ -26,17 +38,37 @@ class SponseeCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'address', 'phone',
                   'birth_certificate', 'national_id']
 
-    def create(self, validated_data):
-        # print(validated_data)
-        return Sponsee(**validated_data)
+
+class SponseeListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Sponsee
+        fields = ['user', 'phone',
+                  'birth_certificate', 'national_id']
 
 
-class SponserSerializer(serializers.ModelSerializer):
+class SponserCreateSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
     class Meta:
         model = Sponser
-        fields = "__all__"
+        fields = ['user']
+
+
+# class SponserListSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = Sponser
+#         fields = ['user', 'phone',
+#                   'birth_certificate', 'national_id']
+
+
+class SponserSerializer(serializers.ModelSerializer):
+    user = UserRetrieveSerializer()
+
+    class Meta:
+        model = Sponser
+        fields = ["user"]
 
 
 class SchoolSerializer(serializers.ModelSerializer):

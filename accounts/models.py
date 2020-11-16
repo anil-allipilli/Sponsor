@@ -23,7 +23,7 @@ def year_choices():
 
 
 class School(models.Model):
-    student = models.ForeignKey("Sponsee", on_delete=models.CASCADE)
+    student = models.OneToOneField("Sponsee", on_delete=models.CASCADE)
     name = models.CharField(max_length=32)
     address = models.TextField(max_length=512)
     academic_level = models.IntegerField(
@@ -38,11 +38,11 @@ class School(models.Model):
 
 
 class Reason(models.Model):
-    student = models.ForeignKey('Sponsee', on_delete=models.CASCADE)
+    student = models.OneToOneField('Sponsee', on_delete=models.CASCADE)
     reason = models.TextField(max_length=2048, null=False)
 
-    def __str__(self):
-        return str(self.student.username) + " " + self.reason
+    # def __str__(self):
+    #     return str(self.student.username) + " " + self.reason
 
 
 class Sponser(models.Model):
