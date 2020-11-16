@@ -6,11 +6,11 @@ from rest_framework_simplejwt import views as jwt_views
 from accounts.viewsets import (
     UserViewSet,
     SchoolViewSet,
-    ReasonViewSet,
+
     SponserViewSet,
     SponseeListViewSet
 )
-from accounts.views import CreateSponseeView, CreateSponserView, SponseeReasonView
+from accounts.views import CreateSponseeView, CreateSponserView, SponseeReasonView, SponseeSchoolAPIView
 
 router = DefaultRouter()
 
@@ -28,6 +28,8 @@ urlpatterns = [
          CreateSponserView.as_view()),
     path('reason/',
          SponseeReasonView.as_view()),
+    path('school/',
+         SponseeSchoolAPIView.as_view()),
     # path('accounts/', include('django.contrib.auth.urls')),
     # path('api-auth/', include('rest_framework.urls')),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(),
