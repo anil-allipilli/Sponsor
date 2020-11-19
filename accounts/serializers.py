@@ -67,7 +67,8 @@ class SchoolSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = School
-        fields = ["name", "address", ]
+        fields = ["student", "name", "address", "academic_level",
+                  "expected_year_of_completion"]
 
 
 class ReasonSerializer(serializers.ModelSerializer):
@@ -88,6 +89,7 @@ class SponserSerializer(serializers.ModelSerializer):
 class SponseeListSerializer(serializers.ModelSerializer):
     school = SchoolSerializer()
     reason = ReasonSerializer()
+    user = UserRetrieveSerializer()
 
     class Meta:
         model = Sponsee

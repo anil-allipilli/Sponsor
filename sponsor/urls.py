@@ -10,12 +10,12 @@ from accounts.viewsets import (
     SponserViewSet,
     SponseeListViewSet
 )
-from accounts.views import CreateSponseeView, CreateSponserView, SponseeReasonView, SponseeSchoolAPIView
+from accounts.views import CreateSponseeView, CreateSponserView, SponseeReasonView, SponseeSchoolAPIView, SponseeAPIView
 
 router = DefaultRouter()
 
 # router.register("users", UserViewSet, basename="users")
-# router.register("schools", SchoolViewSet, basename="schools")
+router.register("schools", SchoolViewSet, basename="schools")
 # router.register("reasons", ReasonViewSet, basename="reasons")
 router.register("sponsers", SponserViewSet, basename="sponsers")
 router.register("sponsees", SponseeListViewSet, basename="sponsees")
@@ -30,6 +30,8 @@ urlpatterns = [
          SponseeReasonView.as_view()),
     path('school/',
          SponseeSchoolAPIView.as_view()),
+    path('sponsee-detail/',
+         SponseeAPIView.as_view()),
     # path('accounts/', include('django.contrib.auth.urls')),
     # path('api-auth/', include('rest_framework.urls')),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(),
