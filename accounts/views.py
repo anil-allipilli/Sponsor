@@ -2,11 +2,11 @@ from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status, mixins
-from accounts.serializers import SponseeCreateSerializer, SponserCreateSerializer, ReasonSerializer, SchoolSerializer, SponseeListSerializer
+from accounts.serializers import SponseeCreateSerializer, SponserCreateSerializer, ReasonSerializer, SchoolSerializer, SponseeListSerializer, MyTokenObtainPairSerializer
 from accounts.models import Sponsee, User, School, Reason, Sponser, Sponsee
 from accounts.permissions import IsOwnerOrReadOnly
 from rest_framework.settings import api_settings
-
+from rest_framework_simplejwt import views as jwt_views
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -292,3 +292,7 @@ class SponseeAPIView(GenericAPIView):
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class MyTokenObtainPairView(jwt_views.TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
