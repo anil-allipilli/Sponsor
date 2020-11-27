@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, mixins
 from accounts.serializers import SponseeCreateSerializer, SponserCreateSerializer, ReasonSerializer, SchoolSerializer, SponseeListSerializer, MyTokenObtainPairSerializer
 from accounts.models import Sponsee, User, School, Reason, Sponser, Sponsee
-from accounts.permissions import IsOwnerOrReadOnly
+from accounts.permissions import IsOwnerOrSponsorStaffReadOnly
 from rest_framework.settings import api_settings
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework.permissions import IsAuthenticated
@@ -32,30 +32,20 @@ class CreateSponseeView(CreateAPIView):
             birth_certificate=request.data.get("birthCertificate"),
             national_id=request.data.get("nationalId"),
         )
+        new_school = School.objects.create(
+            student=new_sponsee,
+            name="",
+            address="",
+            academic_level=1,
+            expected_year_of_completion=2021
+        )
+        new_reason = Reason.objects.create(
+            student=new_sponsee,
+            reason=""
+        )
         headers = self.get_success_headers(
             SponseeCreateSerializer(new_sponsee).data)
         return Response(SponseeCreateSerializer(new_sponsee).data, headers=headers)
-
-
-class CreateSponserView(CreateAPIView):
-
-    serializer_class = SponserCreateSerializer
-
-    def create(self, request):
-        new_user = User.objects.create_user(
-            username=request.data.get("username"),
-            password=request.data.get("password"),
-            first_name=request.data.get("firstName"),
-            last_name=request.data.get("lastName"),
-            email=request.data.get("email"),
-            is_active=True,
-        )
-        new_sponser = Sponser.objects.create(
-            user=new_user,
-        )
-        headers = self.get_success_headers(
-            SponserCreateSerializer(new_sponser).data)
-        return Response(SponserCreateSerializer(new_sponser).data, headers=headers)
 
 
 class SponseeReasonView(GenericAPIView):
@@ -79,6 +69,8 @@ class SponseeReasonView(GenericAPIView):
         return self.destroy(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
+        print(request.user)
+        print(Sponsee.objects.get(user__username=request.user.username).id)
         serializer = self.get_serializer(data={
             "reason": request.data.get("reason"),
             "student": Sponsee.objects.get(user__username=request.user.username).id
@@ -231,7 +223,7 @@ class SponseeSchoolAPIView(GenericAPIView):
 class SponseeAPIView(GenericAPIView):
     queryset = Sponsee.objects.all()
     serializer_class = SponseeListSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     # def post(self, request, *args, **kwargs):
     #     return self.create(request, *args, **kwargs)
@@ -292,7 +284,3 @@ class SponseeAPIView(GenericAPIView):
 
     def perform_update(self, serializer):
         serializer.save()
-
-
-class MyTokenObtainPairView(jwt_views.TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer

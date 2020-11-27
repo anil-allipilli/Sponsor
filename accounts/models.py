@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
+from django.shortcuts import reverse
 
 
 class Sponsee(models.Model):
@@ -43,6 +44,8 @@ class Reason(models.Model):
 
     # def __str__(self):
     #     return str(self.student.username) + " " + self.reason
+    def get_absolute_url(self):
+        return "reasons/{id}".format(id=self.id)
 
 
 class Sponser(models.Model):

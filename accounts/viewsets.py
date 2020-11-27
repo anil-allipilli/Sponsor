@@ -15,59 +15,52 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 
-from rest_framework.permissions import IsAuthenticated
-from accounts.permissions import IsOwnerOrReadOnly
-from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from accounts.permissions import IsOwnerOrSponsorStaffReadOnly, SponseeOrStaffReadOnly, MyPermissionMixin
+from rest_framework.generics import GenericAPIView, get_object_or_404
+from accounts.utils import check_user_type
+from rest_framework.decorators import action
+from django.http import Http404
+# from django.shortcuts import get_object_or_404 as _get_object_or_404
 
 
-class SponserViewSet(viewsets.ReadOnlyModelViewSet):
-    # permission_classes = [IsAuthenticated]
+class GetObjectMixin:
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(
+            queryset, **{"student": self.request.user.sponsee})
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+
+class SponserViewSet(viewsets.ModelViewSet):
 
     queryset = Sponser.objects.all()
     serializer_class = SponserSerializer
 
 
-class SponseeListViewSet(viewsets.ReadOnlyModelViewSet):
-    # permission_classes = [IsAuthenticated]
-
+class SponseeListViewSet(MyPermissionMixin, viewsets.ModelViewSet):
     queryset = Sponsee.objects.all()
     serializer_class = SponseeListSerializer
 
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(
+            queryset, **{"user": self.request.user})
+        self.check_object_permissions(self.request, obj)
+        return obj
 
-class SchoolViewSet(viewsets.ReadOnlyModelViewSet):
-    # permission_classes = [IsAuthenticated]
+
+class SchoolViewSet(GetObjectMixin, MyPermissionMixin, viewsets.ModelViewSet):
 
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
 
-# class ReasonViewSet(GenericAPIView):
-#     permission_classes = [IsOwnerOrReadOnly]
+class ReasonViewSet(GetObjectMixin, MyPermissionMixin, viewsets.ModelViewSet):
 
-#     queryset = Reason.objects.all()
-#     serializer_class = ReasonSerializer
-
-#     def update(self, request, *args, **kwargs):
-#         partial = kwargs.pop('partial', False)
-#         instance = self.get_object()
-#         serializer = self.get_serializer(
-#             instance, data=request.data, partial=partial)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_update(serializer)
-
-#         if getattr(instance, '_prefetched_objects_cache', None):
-#             # If 'prefetch_related' has been applied to a queryset, we need to
-#             # forcibly invalidate the prefetch cache on the instance.
-#             instance._prefetched_objects_cache = {}
-
-#         return Response(serializer.data)
-
-#     def perform_update(self, serializer):
-#         serializer.save()
-
-#     def partial_update(self, request, *args, **kwargs):
-#         kwargs['partial'] = True
-#         return self.update(request, *args, **kwargs)
+    queryset = Reason.objects.all()
+    serializer_class = ReasonSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
