@@ -17,23 +17,14 @@ class MyCurrentSponseeDefault:
 
 
 class SponseeCreateSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-
     class Meta:
         model = Sponsee
-        fields = ['id', 'user', 'address', 'phone',
+        fields = ['user', 'address', 'phone',
                   'birth_certificate', 'national_id']
 
 
-# class SponseeListSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Sponsee
-#         fields = ['user', 'phone',
-#                   'birth_certificate', 'national_id']
-
-
 class SchoolSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=True)
 
     class Meta:
         model = School
@@ -46,6 +37,7 @@ class ReasonSerializer(serializers.ModelSerializer):
     student = serializers.HiddenField(
         default=MyCurrentSponseeDefault()
     )
+    reason = serializers.CharField(required=True)
 
     class Meta:
         model = Reason
@@ -53,11 +45,17 @@ class ReasonSerializer(serializers.ModelSerializer):
 
 
 class SponseeListSerializer(serializers.ModelSerializer):
-    school = SchoolSerializer()
-    reason = ReasonSerializer()
-    user = UserRetrieveSerializer()
+    user = UserSerializer(read_only=True)
+    school = SchoolSerializer(read_only=True)
+    reason = ReasonSerializer(read_only=True)
 
     class Meta:
         model = Sponsee
-        fields = ['user', 'phone', "school", "reason",
-                  'birth_certificate', 'national_id']
+        fields = [
+            'phone',
+            'birth_certificate',
+            'national_id',
+            'user',
+            "school",
+            "reason",
+        ]

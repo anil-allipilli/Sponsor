@@ -1,2 +1,2 @@
-from accounts.views.sponseeviews import *
-from accounts.views.views import *
+from accounts.views.createsponseeview import *
+from accounts.views.createsponserview import *

@@ -26,11 +26,14 @@ from django.http import Http404
 
 class GetObjectMixin:
     def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(
-            queryset, **{"student": self.request.user.sponsee})
-        self.check_object_permissions(self.request, obj)
-        return obj
+        if(check_user_type(self.request.user) == "sponsee"):
+            queryset = self.filter_queryset(self.get_queryset())
+            obj = get_object_or_404(
+                queryset, **{"student": self.request.user.sponsee})
+            self.check_object_permissions(self.request, obj)
+            return obj
+        else:
+            return super().get_object()
 
 
 class SponserViewSet(viewsets.ModelViewSet):
@@ -44,11 +47,14 @@ class SponseeListViewSet(MyPermissionMixin, viewsets.ModelViewSet):
     serializer_class = SponseeListSerializer
 
     def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(
-            queryset, **{"user": self.request.user})
-        self.check_object_permissions(self.request, obj)
-        return obj
+        if(check_user_type(self.request.user) == "sponsee"):
+            queryset = self.filter_queryset(self.get_queryset())
+            obj = get_object_or_404(
+                queryset, **{"user": self.request.user})
+            self.check_object_permissions(self.request, obj)
+            return obj
+        else:
+            return super().get_object()
 
 
 class SchoolViewSet(GetObjectMixin, MyPermissionMixin, viewsets.ModelViewSet):
@@ -64,6 +70,9 @@ class ReasonViewSet(GetObjectMixin, MyPermissionMixin, viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user

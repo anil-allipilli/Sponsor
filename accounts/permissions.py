@@ -12,13 +12,11 @@ class IsOwnerOrSponsorStaffReadOnly(permissions.BasePermission):
                 and check_user_type(request.user) in ["sponser", "staff"]):
             return True
         print(request.user)
-
         try:
             user_obj = obj.student.user
         except AttributeError:
             user_obj = obj.user
         print(user_obj == request.user)
-
         return user_obj == request.user
 
 
@@ -37,11 +35,10 @@ class MyPermissionMixin:
     def get_permissions(self):
         if self.action == 'list':
             permission_classes = [IsAuthenticated & SponseeOrStaffReadOnly]
-        elif (self.action in ['retrieve', 'update', 'partial_update']):
+        elif (self.action in ['retrieve', 'update', 'partial_update', 'create']):
             print("hrllp")
             permission_classes = [IsAuthenticated &
                                   IsOwnerOrSponsorStaffReadOnly]
-
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]

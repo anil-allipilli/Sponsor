@@ -15,15 +15,15 @@ from accounts.viewsets import (
 from accounts.views import (
     CreateSponseeView,
     CreateSponserView,
-    SponseeReasonView,
-    SponseeSchoolAPIView,
-    SponseeAPIView,
+    # SponseeReasonView,
+    # SponseeSchoolAPIView,
+    # SponseeAPIView,
     MyTokenObtainPairView
 )
 
 router = DefaultRouter()
 
-router.register("users", UserViewSet, basename="users")
+# router.register("users", UserViewSet, basename="users")
 router.register("schools", SchoolViewSet, basename="schools")
 router.register("reasons", ReasonViewSet, basename="reasons")
 router.register("sponsers", SponserViewSet, basename="sponsers")
@@ -39,12 +39,14 @@ urlpatterns = [
         ReasonViewSet.as_view({
             'get': 'retrieve',
             'put': 'update',
+            'post': 'create',
+            'patch': 'partial_update'
         })
     ),
     # view for sponsors and staff
     path(
         'reasons/',
-        ReasonViewSet.as_view({'get': 'list'})
+        ReasonViewSet.as_view({'get': 'list', 'get': 'retrieve'})
     ),
     # view for sponsees
     path(
@@ -53,16 +55,28 @@ urlpatterns = [
             'get': 'retrieve',
             'put': 'update',
             'patch': 'partial_update',
+            'post': 'create',
         })
     ),
     # view for sponsors and staff
     path(
         'schools/',
-        SchoolViewSet.as_view({'get': 'list'})
+        SchoolViewSet.as_view({'get': 'list', 'get': 'retrieve'})
     ),
 
     path('mysponseeprofile/',
          SponseeListViewSet.as_view({
+             'get': 'retrieve',
+             'patch': 'partial_update',
+             'put': 'update'
+         })),
+    path('sponsees/',
+         SponseeListViewSet.as_view({
+             'get': 'list',
+             'get': 'retrieve',
+         })),
+    path('myuserprofile/',
+         UserViewSet.as_view({
              'get': 'retrieve',
              'patch': 'partial_update',
              'put': 'update'
