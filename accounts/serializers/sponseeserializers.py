@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from accounts.models import Sponsee, School, Reason, Sponser
 from accounts.serializers.userserializers import *
+import datetime
 
 
 class MyCurrentSponseeDefault:
@@ -25,6 +26,11 @@ class SponseeCreateSerializer(serializers.ModelSerializer):
 
 class SchoolSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
+    address = serializers.CharField(required=True)
+    academic_level = serializers.IntegerField(
+        required=True, min_value=1, max_value=12)
+    expected_year_of_completion = serializers.IntegerField(
+        required=True, min_value=datetime.date.today().year+1, max_value=datetime.date.today().year+13)
 
     class Meta:
         model = School
