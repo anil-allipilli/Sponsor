@@ -6,10 +6,12 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 class IsOwnerOrSponsorStaffReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
+        print("hello, object")
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
         if (request.method in permissions.SAFE_METHODS
                 and check_user_type(request.user) in ["sponser", "staff"]):
+            print(check_user_type(request.user))
             return True
         print(request.user)
         try:
@@ -24,7 +26,7 @@ class SponseeOrStaffReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
         user_type = check_user_type(request.user)
-        print(user_type)
+        print(user_type, 29)
         if(user_type == "sponsee"):
             return False
         if request.method in permissions.SAFE_METHODS:
@@ -36,9 +38,15 @@ class MyPermissionMixin:
         if self.action == 'list':
             permission_classes = [IsAuthenticated & SponseeOrStaffReadOnly]
         elif (self.action in ['retrieve', 'update', 'partial_update', 'create']):
-            print("hrllp")
+            print('retrieve', 'update', 'partial_update', 'create')
             permission_classes = [IsAuthenticated &
                                   IsOwnerOrSponsorStaffReadOnly]
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
+
+
+class UserProfilePermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj == request.user

@@ -31,10 +31,13 @@ class SchoolSerializer(serializers.ModelSerializer):
         required=True, min_value=1, max_value=12)
     expected_year_of_completion = serializers.IntegerField(
         required=True, min_value=datetime.date.today().year+1, max_value=datetime.date.today().year+13)
+    student = serializers.HiddenField(
+        default=MyCurrentSponseeDefault()
+    )
 
     class Meta:
         model = School
-        fields = ["name", "address", "academic_level",
+        fields = ["student", "name", "address", "academic_level",
                   "expected_year_of_completion"]
 
 

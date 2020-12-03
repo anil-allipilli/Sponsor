@@ -50,6 +50,7 @@ class Reason(models.Model):
 
 class Sponser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    mysponsees = models.ManyToManyField("Sponsee")
 
     def __str__(self):
         return self.user.username

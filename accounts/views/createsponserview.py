@@ -11,6 +11,8 @@ from accounts.models import Sponsee, User, School, Reason, Sponser, Sponsee
 
 from rest_framework.settings import api_settings
 from rest_framework_simplejwt import views as jwt_views
+from rest_framework.decorators import api_view
+from accounts.utils import check_user_type
 
 
 class CreateSponserView(CreateAPIView):
@@ -33,3 +35,14 @@ class CreateSponserView(CreateAPIView):
 
 class MyTokenObtainPairView(jwt_views.TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+@api_view(['POST'])
+def add_sponsorship(request, username):
+    if(check_user_type(request.user) == "sponser"):
+        sponser = Sponser.objects.get(user=request.user)
+        sponser.mysponsees.add(
+            Sponsee.objects.get(user__username=username))
+        return Response(SponserSerializer(sponser, context={'request': request}).data)
+
+    return Response(status=HTTP_404_NOT_FOUND)

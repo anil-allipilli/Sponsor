@@ -8,10 +8,15 @@ from accounts.utils import check_user_type
 
 class SponserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    mysponsees = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='sponsees-detail',
+        read_only=True
+    )
 
     class Meta:
         model = Sponser
-        fields = ["user"]
+        fields = ["user", "mysponsees"]
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

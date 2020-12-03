@@ -10,24 +10,20 @@ from accounts.viewsets import (
     SchoolViewSet,
     ReasonViewSet,
     SponserViewSet,
-    SponseeListViewSet
+    SponseeListViewSet,
+    SponseeReasonViewSet
 )
 from accounts.views import (
     CreateSponseeView,
     CreateSponserView,
-    # SponseeReasonView,
-    # SponseeSchoolAPIView,
-    # SponseeAPIView,
-    MyTokenObtainPairView
+    MyTokenObtainPairView,
+    add_sponsorship
 )
 
 router = DefaultRouter()
+router.register('reasons', SponseeReasonViewSet, basename="reasons")
+router.register('sponsees', SponseeListViewSet, basename="sponsees")
 
-# router.register("users", UserViewSet, basename="users")
-router.register("schools", SchoolViewSet, basename="schools")
-router.register("reasons", ReasonViewSet, basename="reasons")
-router.register("sponsers", SponserViewSet, basename="sponsers")
-router.register("sponsees", SponseeListViewSet, basename="sponsees")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,10 +40,10 @@ urlpatterns = [
         })
     ),
     # view for sponsors and staff
-    path(
-        'reasons/',
-        ReasonViewSet.as_view({'get': 'list', 'get': 'retrieve'})
-    ),
+    # path(
+    #     'reasons/<int:pk>',
+    #     SponseeReasonViewSet.as_view({'get': 'retrieve'})
+    # ),
     # view for sponsees
     path(
         'myschool/',
@@ -63,29 +59,43 @@ urlpatterns = [
         'schools/',
         SchoolViewSet.as_view({'get': 'list', 'get': 'retrieve'})
     ),
-
-    path('mysponseeprofile/',
-         SponseeListViewSet.as_view({
-             'get': 'retrieve',
-             'patch': 'partial_update',
-             'put': 'update'
-         })),
-    path('sponsees/',
-         SponseeListViewSet.as_view({
-             'get': 'list',
-             'get': 'retrieve',
-         })),
-    path('myuserprofile/',
-         UserViewSet.as_view({
-             'get': 'retrieve',
-             'patch': 'partial_update',
-             'put': 'update'
-         })),
-    # path('accounts/', include('django.contrib.auth.urls')),
-    # path('api-auth/', include('rest_framework.urls')),
-    path('api/token/', MyTokenObtainPairView.as_view(),
-         name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(),
-         name='token_refresh'),
+    # view for sponsees
+    path(
+        'mysponseeprofile/',
+        SponseeListViewSet.as_view({
+            'get': 'retrieve',
+            'patch': 'partial_update',
+            'put': 'update'
+        })),
+    # view for sponsors and staff
+    path(
+        'sponsees/',
+        SponseeListViewSet.as_view({
+            'get': 'list',
+            # 'get': 'retrieve',
+        })),
+    # views for sponsors and staff and sponsees
+    path(
+        'myuserprofile/',
+        UserViewSet.as_view({
+            'get': 'retrieve',
+            'patch': 'partial_update',
+            'put': 'update'
+        })),
+    path(
+        'api/token/',
+        MyTokenObtainPairView.as_view(),
+        name='token_obtain_pair'
+    ),
+    path(
+        'api/token/refresh/',
+        jwt_views.TokenRefreshView.as_view(),
+        name='token_refresh'
+    ),
+    path(
+        'addsponsorship/<str:username>',
+        add_sponsorship,
+        name='add_sponsorship'
+    ),
     path('', include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
