@@ -13,6 +13,7 @@ from rest_framework.settings import api_settings
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework.decorators import api_view
 from accounts.utils import check_user_type
+from accounts.tasks import send_staff_email_task
 
 
 class CreateSponserView(CreateAPIView):
@@ -41,8 +42,8 @@ class MyTokenObtainPairView(jwt_views.TokenObtainPairView):
 def add_sponsorship(request, username):
     if(check_user_type(request.user) == "sponser"):
         sponser = Sponser.objects.get(user=request.user)
-        sponser.mysponsees.add(
-            Sponsee.objects.get(user__username=username))
+        sponsee = Sponsee.objects.get(user__username=username)
+        sponser.mysponsees.add(sponsee)
+        send_staff_email_task.delay(sponser, sponsee)
         return Response(SponserSerializer(sponser, context={'request': request}).data)
-
     return Response(status=HTTP_404_NOT_FOUND)
