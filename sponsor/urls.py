@@ -4,6 +4,8 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt import views as jwt_views
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.generic import TemplateView
+
 
 from accounts.viewsets import (
     UserViewSet,
@@ -97,5 +99,6 @@ urlpatterns = [
         add_sponsorship,
         name='add_sponsorship'
     ),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
+    path('', TemplateView.as_view(template_name="index.html")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

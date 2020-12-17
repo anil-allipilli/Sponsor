@@ -4,11 +4,11 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 
 
-def send_staff_email(sponsor, sponsee):
+def send_staff_email(sponsor, sponsee_name, sponsee_email):
 
     email_subject = 'Sponsor decided to sponsor a sponsee'
     email_body = 'Sponsor {sponsor} wants to sponsee {sponsee} with {email}.'.format(
-        sponsor=sponsor.user.username, sponsee=sponsee.user.first_name, email=sponsee.user.email)
+        sponsor=sponsor, sponsee=sponsee_name, email=sponsee_email)
 
     email = EmailMessage(
         email_subject,

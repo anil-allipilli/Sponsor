@@ -44,6 +44,9 @@ def add_sponsorship(request, username):
         sponser = Sponser.objects.get(user=request.user)
         sponsee = Sponsee.objects.get(user__username=username)
         sponser.mysponsees.add(sponsee)
-        send_staff_email_task.delay(sponser, sponsee)
+        sponser_name = sponser.user.first_name + " " + sponser.user.last_name
+        sponsee_name = sponsee.user.first_name + " " + sponsee.user.last_name
+        send_staff_email_task.delay(
+            sponser_name, sponsee_name, sponsee.user.email)
         return Response(SponserSerializer(sponser, context={'request': request}).data)
     return Response(status=HTTP_404_NOT_FOUND)

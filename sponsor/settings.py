@@ -61,7 +61,7 @@ ROOT_URLCONF = 'sponsor.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -160,28 +160,47 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
-CORS_ORIGIN_ALLOW = True
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000/',
-    'http://127.0.0.1:3000',
-    'http://192.168.0.101:3000',
-)
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    'http://127.0.0.1:3000',
 
-    'http://192.168.0.101:3000',
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    # os.path.join(BASE_DIR,   "staticfiles")
+    os.path.join(BASE_DIR,  "static")
+]
+STATIC_ROOT = os.path.join(BASE_DIR,  "staticfiles")
 
-]
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-    'Access-Control-Allow-Origin'
-]
+APP_PASSWORD = os.environ['APP_PASSWORD']
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'anilkmr458@gmail.com'
+EMAIL_HOST_PASSWORD = APP_PASSWORD
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'anilkmr458@gmail.com'
+
+
+# CORS_ORIGIN_ALLOW = True
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000/',
+#     'http://127.0.0.1:3000',
+#     'http://192.168.0.101:3000',
+# )
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     'http://127.0.0.1:3000',
+
+#     'http://192.168.0.101:3000',
+
+# ]
+# CORS_ALLOW_HEADERS = [
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+#     'Access-Control-Allow-Origin'
+# ]
